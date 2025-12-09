@@ -25,15 +25,13 @@ namespace SydneyCoffee
 
             for (int i = 0; i < n; i++)
             {
-                // CHANGE 1: Name validation
-                string tempName;
-                do
+                Console.Write("Enter customer name: ");
+                string tempName = Console.ReadLine();
+                while (string.IsNullOrWhiteSpace(tempName))
                 {
                     Console.Write("Enter customer name: ");
-                    tempName = Console.ReadLine().Trim();
-                    if (tempName == "")
-                        Console.WriteLine("Name cannot be empty. Try again.");
-                } while (tempName == "");
+                    tempName = Console.ReadLine();
+                }
                 name.Add(tempName);
 
                 int q = 0;
@@ -41,8 +39,6 @@ namespace SydneyCoffee
                 {
                     Console.Write("Enter number of coffee bean bags (1–200): ");
                     q = Convert.ToInt32(Console.ReadLine());
-                    if (q < 1 || q > 200)
-                        Console.WriteLine("Invalid input! Enter between 1 and 200.");
                 } while (q < 1 || q > 200);
 
                 quantity.Add(q);
@@ -57,4 +53,54 @@ namespace SydneyCoffee
                 string tempReseller;
                 do
                 {
-                    Console.Write("Are you a resell
+                    Console.Write("Are you a reseller? (y/n): ");
+                    tempReseller = Console.ReadLine().ToLower();
+                    if (tempReseller == "y") tempReseller = "yes";
+                    if (tempReseller == "n") tempReseller = "no";
+                } while (tempReseller != "yes" && tempReseller != "no");
+
+                reseller.Add(tempReseller);
+
+                double finalCharge;
+
+                if (tempReseller == "yes")
+                    finalCharge = Math.Round(price * 0.8, 2);
+                else
+                    finalCharge = Math.Round(price, 2);
+
+                charge.Add(finalCharge);
+
+                Console.WriteLine($"Total charge for {name[i]} is ${finalCharge}");
+                Console.WriteLine("-----------------------------------------------------");
+
+                if (finalCharge < min)
+                {
+                    min = finalCharge;
+                    minName = name[i];
+                }
+
+                if (finalCharge > max)
+                {
+                    max = finalCharge;
+                    maxName = name[i];
+                }
+            }
+
+            Console.WriteLine("\n============= SUMMARY REPORT =============");
+
+            double sum = 0;
+            for (int i = 0; i < n; i++)
+            {
+                sum += charge[i];
+            }
+
+            double average = sum / n;
+            Console.WriteLine($"Average order charge: ${average:F2}");
+            Console.WriteLine($"Lowest charge: ${min} by {minName}");
+            Console.WriteLine($"Highest charge: ${max} by {maxName}");
+
+            Console.WriteLine($"\nProcessed {n} customers.");
+            Console.WriteLine("\nThank you for using Sydney Coffee Program!");
+        }
+    }
+}
